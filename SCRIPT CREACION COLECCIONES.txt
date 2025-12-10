@@ -1,0 +1,211 @@
+// =========================
+// CREACIÓN DE COLECCIONES
+// =========================
+
+// MIGRANTES
+db.createCollection("migrantes", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: [
+        "nombre_completo",
+        "documento",
+        "nacionalidad",
+        "pais_origen",
+        "fecha_llegada",
+        "motivo_migracion"
+      ],
+      properties: {
+        nombre_completo: { bsonType: "string" },
+        documento: { bsonType: "string" },
+        edad: { bsonType: ["int", "null"], minimum: 0 },
+        genero: { bsonType: ["string", "null"] },
+        nacionalidad: { bsonType: "string" },
+        pais_origen: { bsonType: "string" },
+        fecha_llegada: {
+          bsonType: "string",
+          pattern: "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/[0-9]{4}$"
+        },
+        correo: { bsonType: ["string", "null"], pattern: "^.+@.+\\..+$" },
+        numero_telefonico: { bsonType: ["string", "null"] },
+        motivo_migracion: { bsonType: "string" }
+      }
+    }
+  }
+});
+
+// USUARIOS (funcionarios)
+db.createCollection("usuarios", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["nombre", "rol", "correo", "contrasena"],
+      properties: {
+        nombre: { bsonType: "string" },
+        rol: { bsonType: "string" },
+        correo: { bsonType: "string", pattern: "^.+@.+\\..+$" },
+        contrasena: { bsonType: "string" }
+      }
+    }
+  }
+});
+
+// REGISTROS_ATENCION
+db.createCollection("registros_atencion", {
+  validator: {
+    $jsonSchema: {
+      bsonType: "object",
+      required: ["fecha", "id_migrante", "id_funcionario", "id_institucion"],
+      properties: {
+        fecha: {
+          bsonType: "string",
+          pattern: "^(0[1-9]|[12][0-9]|3[01])/(0[1-9]|1[0-2])/[0-9]{4}$"
+        },
+        observaciones: { bsonType: ["string", "null"] },
+        id_migrante: { bsonType: "objectId" },
+        id_funcionario: { bsonType: "objectId" },
+        id_institucion: { bsonType: "objectId" },
+        id_migrante_servicio: { bsonType: ["objectId", "null"] }
+      }
+    }
+  }
+});
+
+// =========================
+// INSERTS MIGRANTES
+// =========================
+
+db.migrantes.insertMany([
+  {
+    nombre_completo: "Luis Alberto Pérez",
+    documento: "CC123",
+    edad: 32,
+    genero: "Masculino",
+    nacionalidad: "Venezolana",
+    pais_origen: "Venezuela",
+    fecha_llegada: "10/03/2023",
+    correo: "luis.perez@mail.com",
+    numero_telefonico: "3001112233",
+    motivo_migracion: "Búsqueda de empleo"
+  },
+  {
+    nombre_completo: "María Fernanda Díaz",
+    documento: "CC456",
+    edad: 27,
+    genero: "Femenino",
+    nacionalidad: "Colombiana",
+    pais_origen: "Colombia",
+    fecha_llegada: "21/08/2022",
+    correo: "maria.diaz@mail.com",
+    numero_telefonico: "3004445566",
+    motivo_migracion: "Reunificación familiar"
+  },
+  {
+    nombre_completo: "Carlos Andrés Rojas",
+    documento: "CC789",
+    edad: 40,
+    genero: "Masculino",
+    nacionalidad: "Ecuatoriana",
+    pais_origen: "Ecuador",
+    fecha_llegada: "05/11/2024",
+    correo: "carlos.rojas@mail.com",
+    numero_telefonico: "3007778899",
+    motivo_migracion: "Conflicto social"
+  },
+  {
+    nombre_completo: "Ana Lucía Herrera",
+    documento: "CC987",
+    edad: 35,
+    genero: "Femenino",
+    nacionalidad: "Peruana",
+    pais_origen: "Perú",
+    fecha_llegada: "19/01/2023",
+    correo: "ana.herrera@mail.com",
+    numero_telefonico: "3002223344",
+    motivo_migracion: "Estudios"
+  }
+]);
+
+// =========================
+// INSERTS USUARIOS
+// =========================
+
+db.usuarios.insertMany([
+  {
+    nombre: "Funcionario 1",
+    rol: "FUNCIONARIO",
+    correo: "funcionario1@mail.com",
+    contrasena: "hash_o_contrasena_segura_1"
+  },
+  {
+    nombre: "Funcionario 2",
+    rol: "ADMIN",
+    correo: "admin@mail.com",
+    contrasena: "hash_o_contrasena_segura_2"
+  },
+  {
+    nombre: "Funcionario 3",
+    rol: "FUNCIONARIO",
+    correo: "funcinario3@mail.com",
+    contrasena: "hash_o_contrasena_segura_3"
+  },
+  {
+    nombre: "Funcionario 4",
+    rol: "FUNCIONARIO",
+    correo: "funcionario4@mail.com",
+    contrasena: "hash_o_contrasena_segura_4"
+  }
+]);
+
+// =========================
+// INSERTS REGISTROS_ATENCION
+// =========================
+
+// Obtener ObjectId de migrantes y usuarios
+var m1 = db.migrantes.findOne({ documento: "CC123" })._id;
+var m2 = db.migrantes.findOne({ documento: "CC456" })._id;
+var m3 = db.migrantes.findOne({ documento: "CC789" })._id;
+var m4 = db.migrantes.findOne({ documento: "CC987" })._id;
+
+var f1 = db.usuarios.findOne({ correo: "funcionario1@mail.com" })._id;
+var f2 = db.usuarios.findOne({ correo: "admin@mail.com" })._id;
+var f3 = db.usuarios.findOne({ correo: "funcinario3@mail.com" })._id;
+var f4 = db.usuarios.findOne({ correo: "funcionario4@mail.com" })._id;
+
+// Reemplaza este ObjectId por uno real de tu colección INSTITUCION
+var inst1 = ObjectId("653000000000000000000001");
+
+db.registros_atencion.insertMany([
+  {
+    fecha: "25/05/2024",
+    observaciones: "Orientación inicial sobre regularización.",
+    id_migrante: m1,
+    id_funcionario: f1,
+    id_institucion: inst1,
+    id_migrante_servicio: null
+  },
+  {
+    fecha: "10/07/2024",
+    observaciones: "Remisión a servicios de salud.",
+    id_migrante: m2,
+    id_funcionario: f2,
+    id_institucion: inst1,
+    id_migrante_servicio: null
+  },
+  {
+    fecha: "03/09/2024",
+    observaciones: "Atención psicológica individual.",
+    id_migrante: m3,
+    id_funcionario: f3,
+    id_institucion: inst1,
+    id_migrante_servicio: null
+  },
+  {
+    fecha: "18/11/2024",
+    observaciones: "Asesoría jurídica sobre estatus migratorio.",
+    id_migrante: m4,
+    id_funcionario: f4,
+    id_institucion: inst1,
+    id_migrante_servicio: null
+  }
+]);
