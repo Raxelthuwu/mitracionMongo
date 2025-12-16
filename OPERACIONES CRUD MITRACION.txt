@@ -1,0 +1,41 @@
+// 1. UPDATES EN DOS COLECCIONES
+db.migrantes.updateOne(
+  { documento: "CC123" },
+  { $set: { correo: "nuevo.correo.luis@mail.com" } }
+);
+
+db.usuarios.updateOne(
+  { correo: "funcionario1@mail.com" },
+  { $set: { rol: "COORDINADOR" } }
+);
+
+// 2. ELIMINACIÓN DE UN DOCUMENTO
+db.migrantes.deleteOne({ documento: "CC987" });
+
+// 3. CONSULTAS (find y aggregate)
+db.migrantes.find({ nacionalidad: "Venezolana" });
+
+db.registros_atencion.aggregate([
+  {
+    $lookup: {
+      from: "migrantes",
+      localField: "id_migrante",
+      foreignField: "_id",
+      as: "migrante"
+    }
+  },
+  { $unwind: "$migrante" },
+  {
+    $project: {
+      _id: 0,
+      fecha: 1,
+      observaciones: 1,
+      "migrante.nombre_completo": 1,
+      "migrante.documento": 1
+    }
+  }
+]);
+
+// 4. INSTRUCCIÓN DE BACKUP
+mongodump --db mitracion --out "C:\respaldos\backup-mitracion"
+
