@@ -1,0 +1,65 @@
+BASE URL: http://localhost:3000
+
+========================
+MIGRANTES
+POST http://localhost:3000/migrantes
+Body (raw JSON):
+{
+"nombre_completo": "Luis Alberto Pérez",
+"documento": "CC123",
+"nacionalidad": "Venezolana",
+"pais_origen": "Venezuela",
+"fecha_llegada": "10032023",
+"motivo_migracion": "Búsqueda de empleo",
+"edad": 32,
+"genero": "Masculino",
+"correo": "luis.perez@mail.com",
+"numero_telefonico": "3001112233"
+}
+
+GET http://localhost:3000/migrantes
+
+GET http://localhost:3000/migrantes/:id
+Ejemplo:
+GET http://localhost:3000/migrantes/6560c8f0b9c1f2a6e9a11111
+
+PUT http://localhost:3000/migrantes/:id
+Body (raw JSON):
+{
+"correo": "nuevo.correo@mail.com",
+"numero_telefonico": "3120000000",
+"edad": 33
+}
+
+DELETE http://localhost:3000/migrantes/:id
+
+========================
+REGISTROS ATENCION
+POST http://localhost:3000/registros-atencion
+Body (raw JSON):
+{
+"fecha": "25052024",
+"id_migrante": "6560c8f0b9c1f2a6e9a11111",
+"id_funcionario": "6560c8f0b9c1f2a6e9a22222",
+"id_institucion": "653000000000000000000001",
+"observaciones": "Orientación inicial sobre regularización.",
+"id_migrante_servicio": null
+}
+
+GET http://localhost:3000/registros-atencion
+
+GET http://localhost:3000/registros-atencion/:id
+Ejemplo:
+GET http://localhost:3000/registros-atencion/6560c8f0b9c1f2a6e9a33333
+
+PUT http://localhost:3000/registros-atencion/:id
+Body (raw JSON):
+{
+"observaciones": "Se actualizó la observación de la atención"
+}
+
+DELETE http://localhost:3000/registros-atencion/:id
+
+========================
+USUARIOS 
+GET http://localhost:3000/usuarios
